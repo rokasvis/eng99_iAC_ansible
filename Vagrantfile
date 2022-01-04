@@ -17,6 +17,8 @@
        controller.vm.hostname = 'controller'
        
        controller.vm.network :private_network, ip: "192.168.33.12"
+
+       config.vm.provision "shell", path: "controller.sh"
        
        # config.hostsupdater.aliases = ["development.controller"] 
        
@@ -35,7 +37,7 @@
         
         #config.hostsupdater.aliases = ["development.web"]
         # creating a link called development.web so we can access web page with this link instread of an IP   
-            
+        config.vm.provision "shell", path: "web.sh"      
       end
       
     # creating second VM called db
@@ -47,6 +49,7 @@
         
         db.vm.network :private_network, ip: "192.168.33.11"
         
+        config.vm.provision "shell", path: "db.sh"
         #config.hostsupdater.aliases = ["development.db"]     
       end
     

@@ -1,66 +1,58 @@
-# IAC with Ansible
-## Configuration Management
-### Types of Confi Management
-#### Push and Pull Config Management
-##### Tools available for IaC 
+# IaC Ansible
 
+![](images/Ansible.png)
 
-### Let's create Vagrantfile to create Three VMs for Ansible architecture
-#### Ansible controller and Ansible agents 
+## Prerequisites
+
+- Vagrant
+- Ruby
+- Virtual Box
+
+## Setting up Ansible
+
+- On Terminal cd to `Vagrantfile` directory
+- **vagrant up**
+- It will take some and once its done you should see 3 machines running `vagrant status` 
+  - controller
+  - db
+  -web
+
+![](images/3machines.png)
+
+- SSH into controller machine
+- `vagrant ssh controller`
 
 ```
+sudo apt-get update
+sudo apt-get upgrade -y
 
-# -*- mode: ruby -*-
- # vi: set ft=ruby :
- 
- # All Vagrant configuration is done below. The "2" in Vagrant.configure
- # configures the configuration version (we support older styles for
- # backwards compatibility). Please don't change it unless you know what
- 
- # MULTI SERVER/VMs environment 
- #
- Vagrant.configure("2") do |config|
- # creating are Ansible controller
-   config.vm.define "controller" do |controller|
-     
-    controller.vm.box = "bento/ubuntu-18.04"
-    
-    controller.vm.hostname = 'controller'
-    
-    controller.vm.network :private_network, ip: "192.168.33.12"
-    
-    # config.hostsupdater.aliases = ["development.controller"] 
-    
-   end 
- # creating first VM called web  
-   config.vm.define "web" do |web|
-     
-     web.vm.box = "bento/ubuntu-18.04"
-    # downloading ubuntu 18.04 image
- 
-     web.vm.hostname = 'web'
-     # assigning host name to the VM
-     
-     web.vm.network :private_network, ip: "192.168.33.10"
-     #   assigning private IP
-     
-     #config.hostsupdater.aliases = ["development.web"]
-     # creating a link called development.web so we can access web page with this link instread of an IP   
-         
-   end
-   
- # creating second VM called db
-   config.vm.define "db" do |db|
-     
-     db.vm.box = "bento/ubuntu-18.04"
-     
-     db.vm.hostname = 'db'
-     
-     db.vm.network :private_network, ip: "192.168.33.11"
-     
-     #config.hostsupdater.aliases = ["development.db"]     
-   end
- 
- 
- end
+#Fix broken packages
+sudo apt-get install software-properties-common
+
+# Install Ansible
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get install ansible -y
 ```
+- `cd /etc/ansible`
+- add following to the hosts file
+
+```
+[web]
+192.168.33.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[db]
+192.168.33.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+```
+
+### SSH into db/web from controller machine
+
+- `ssh vagrant@192.168.33.10` (web machine)
+- `ssh vagrant@192.168.33.11` (db machine)
+- type *yes* and set password
+
+![](images/dbssh.png)
+
+- back in controller machine you can ping to test connection with your web/db machine
+
+- type `ansible web -m ping`
+![](images/ping.png)
