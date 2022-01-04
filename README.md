@@ -1,4 +1,8 @@
 # IAC with Ansible
+## Configuration Management
+### Types of Confi Management
+#### Push and Pull Config Management
+##### Tools available for IaC 
 
 
 ### Let's create Vagrantfile to create Three VMs for Ansible architecture
